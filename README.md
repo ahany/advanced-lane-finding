@@ -43,7 +43,7 @@ Camera calibration matrix and distortion coefficients are pickled to be loaded w
 
 I applied this distortion correction to a test image using the `cv2.undistort()` function and obtained this result: 
 
-![alt text][image1]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test3_undist.jpg)
 
 ###**Pipeline (frame images)**
 
@@ -61,9 +61,13 @@ The first step in the pipeline is to correct distortion. This is done in two ste
  
  Below is an example of an image before and after distortion correction.
 
+Before:
 
-![alt text][image2]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test6.jpg)
 
+After:
+
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test6_undist.jpg)
 
 ####**2. Binary Thresholding**
 I used a combination of color and gradient thresholds to generate a binary image (thresholding steps in function `image_mask()` at lines 72 through 97 in `HelperFunctions.py`).  I applied color extraction of white and yellow pixels along with absolute sobel thresholds. I found by experimentation that applying sobel thresholding on HLS channels yielded better results. I used L and S channels.
@@ -73,7 +77,7 @@ I used a combination of color and gradient thresholds to generate a binary image
 Here's an example of my output for this step:
 
 
-![alt text][image3]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test3_undist_masked.jpg)
 
 ####**3. Perspective Transform**
 
@@ -115,10 +119,15 @@ To apply perspective transform, the **transfrom()** method is used:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
-![alt text][image4]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test_birds_view_before.jpg)
+
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test_birds_view_after.jpg)
 
 Here is another example of a pipeline image:
 
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/curved_birds_view_before_2.jpg)
+
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/curved_birds_view_after_2.jpg)
 
 ####**4. Lane-line pixels identification**
 
@@ -130,17 +139,17 @@ The helper function `find_histogram_peaks()` in the file `LaneDetector.py` was u
 
     leftx_base, rightx_base = find_histogram_peaks(binary_warped)
 
-![alt text][image5]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/histogram.png)
 
 Then sliding windows are used to find lane pixels starting from the base of the lane lines detected by the histogram and following the lines up to the top of the image returning coefficients for the fitted polynomials for each line. 
 
 This is implemented in the helper function `find_histogram_peaks()`in the file `LaneDetector.py`. Below is an image showing how the output looks like:
 
-![alt text][image5]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/sliding_windows.jpg)
 
 Then a second order polynomial was fit to each lane line using `numpy.polyfit()`. This is how the output should look like:
 
-![alt text][image5]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/fitted_poly.png)
 
 In order to add robustness to lane detection, the absolute difference between obtained polynomial coefficients and the coefficients from the previous iteration. The new coefficients are discarded if the difference exceeds a threshold. The threshold was decided by trying different numbers and selecting the most robust behavior
 
@@ -174,7 +183,7 @@ To smooth out the lane lines, I added filtering over the last 10 frames (lines 2
 
 Calculating the radius of curvature was done by scaling the x and y coordinates of the lane pixels and fitting a new polynomial to the real-world data. The new real-world polynomial coefficients are then used in the formula below to calculate the curvature.
 
-![alt text][image6]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/Curvature_formula.png)
 
 I did this using the helper function `find_lane_curvature()`  in `LaneDetector.py`
 
@@ -190,12 +199,15 @@ The final step is plotting the result back down onto the road and this was done 
 
 The function  `draw_polygon()`applies inverse perspective transform to warp the image back to the original image space.
 
-Below is an example of the rest on a test image:
+Below is an example of the result on a test image:
 
-![alt text][image6]
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/final_image.jpg)
 
 As a final step, the lane curvature and vehicle offset are projected on the final image at lines 263 through 265 in `process_frame()` function in `LaneDetector.py`
-	
+
+The image below is an example of the final output from the pipeline:
+
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/sample_pipeline_output.jpg)
 
 ###**Pipeline (video)**
 
