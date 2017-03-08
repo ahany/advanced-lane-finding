@@ -153,7 +153,7 @@ The helper function `find_histogram_peaks()` in the file `LaneDetector.py` was u
 
 Then sliding windows are used to find lane pixels starting from the base of the lane lines detected by the histogram and following the lines up to the top of the image returning coefficients for the fitted polynomials for each line. 
 
-This is implemented in the helper function `find_histogram_peaks()`in the file `LaneDetector.py`. Below is an image showing how the output looks like:
+This is implemented in the helper function `find_lane_pixels()`in the file `LaneDetector.py`. Below is an image showing how the output looks like:
 
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/sliding_windows.jpg)
 
@@ -161,9 +161,9 @@ Then a second order polynomial was fit to each lane line using `numpy.polyfit()`
 
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/fitted_poly.png)
 
-In order to add robustness to lane detection, the absolute difference between obtained polynomial coefficients and the coefficients from the previous iteration. The new coefficients are discarded if the difference exceeds a threshold. The threshold was decided by trying different numbers and selecting the most robust behavior
+In order to add robustness to lane detection, the absolute difference between obtained polynomial coefficients and the coefficients from the previous iteration is calculated. The new coefficients are discarded if the difference exceeds a threshold. The threshold was decided by trying different numbers and selecting the most robust behavior
 
-The outlier rejection mechanism is implemented at lines 210 through 217 in `LaneDetector.py` and show below:
+The outlier rejection mechanism is implemented at lines 210 through 217 in `LaneDetector.py` and shown below:
 
     # outlier removal
     error_right = np.absolute(right_fit[0] - right_fit_prev[0])
@@ -191,11 +191,11 @@ To smooth out the lane lines, I added filtering over the last 10 frames (lines 2
 
 ####**5. Calculation of radius of curvature for lane lines and vehicle position from center** 
 
-Calculating the radius of curvature was done by scaling the x and y coordinates of the lane pixels and fitting a new polynomial to the real-world data. The new real-world polynomial coefficients are then used in the formula below to calculate the curvature.
+Calculating the radius of curvature was done by scaling the x and y coordinates of the lane pixels and fitting a new polynomial to the real-world data. The new real-world polynomial coefficients are then used in the formula below to calculate the curvature. Real-world values are obtained by using a scaling factor from pixels to meters for both x and y directions.
 
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/Curvature_formula.png)
 
-I did this using the helper function `find_lane_curvature()`  in `LaneDetector.py`
+This was done using the helper function `find_lane_curvature()`  in `LaneDetector.py`
 
 The position of the car with respect to the lane line center is calculated by first finding the x points for the left and right lane lines the bottom of the image and calculating the mean of these two points to get the lane center. Here we assume the lane center is the midpoint at the bottom of the image between the two detected lines.
 
@@ -221,7 +221,9 @@ The image below is an example of the final output from the pipeline:
 
 ###**Pipeline (video)**
 
-Here's a [link to my video result](./project_video.mp4)
+Here's a [link to my project video result](https://github.com/ahany/advanced-lane-finding/blob/master/processed_project_video.mp4)
+
+Here's a [link to my challenge video result](https://github.com/ahany/advanced-lane-finding/blob/master/processed_challenge_video.mp4)
 
 ###Reflection
 
