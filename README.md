@@ -1,6 +1,6 @@
 #**Advanced Lane Finding** 
 
-This project is part of Udacity's [Self-Driving Car Engineer Nanodegree](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013). The goal of the project is to use computer vision to detect lane lines in given videos, calculate the lane curvature and the offset of the vehicle from lane center.
+This project is part of Udacity's [Self-Driving Car Engineer Nanodegree](https://www.udacity.com/course/self-driving-car-engineer-nanodegree--nd013). The goal of the project is to use computer vision to detect lane lines, calculate the lane curvature and the offset of the vehicle from lane center in some input videos.
 
 The steps of this project are the following:
 
@@ -19,7 +19,7 @@ Below I go through the steps mentioned above in more details.
 
 The code for this step is contained in the file called `cam_calib.py`.  
 
-For camera calibration, a set of chessboard images taken at different angles and distances is used. The idea is to map the coordinates of the corners in the chessboard 2D images which are called to `imgpoints` to the 3D coordinates (x, y, z) of the real undistorted chessboard corners called `objpoints`.
+For camera calibration, a set of chessboard images taken at different angles and distances is used. The idea is to map the coordinates of the corners in the chessboard 2D images which are called `imgpoints` to the 3D coordinates (x, y, z) of the real undistorted chessboard corners called `objpoints`.
 
 Here I am assuming the chessboard is fixed on the (x, y) plane at z = 0, such that the object points are the same for each calibration image. 
 
@@ -27,8 +27,9 @@ Here I am assuming the chessboard is fixed on the (x, y) plane at z = 0, such th
      objp = np.zeros((CORNERS_PER_ROW*CORNERS_PER_COLUMN, 3), np.float32)
      objp[:, :2] = np.mgrid[0:CORNERS_PER_ROW, 0:CORNERS_PER_COLUMN].T.reshape(-1, 2)
 
-Next I prepared `imgpoints` by detecting the corners of the chessboard in the distorted calibration image using OpenCV's function`cv2.findChessboardCorners()`.  
-A copy of `objp` every time I successfully detect all chessboard corners in a test image. 
+Next I prepared `imgpoints` by detecting the corners of the chessboard in the distorted calibration image using OpenCV's function`cv2.findChessboardCorners()`.
+
+A copy of `objp` is appended every time I successfully detect all chessboard corners in a test image. 
 
     retval, corners = cv2.findChessboardCorners(gray, (CORNERS_PER_ROW, CORNERS_PER_COLUMN), None)
     if retval:
@@ -126,11 +127,13 @@ To apply perspective transform, the **transfrom()** method is used:
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
 
+![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/myfig_test_img.png)
+
+Below are two examples of images before and after transformation:
+
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test_birds_view_before.jpg)
 
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test_birds_view_after.jpg)
-
-Here is another example of a pipeline image:
 
 ![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/curved_birds_view_before_2.jpg)
 
