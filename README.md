@@ -43,7 +43,14 @@ Camera calibration matrix and distortion coefficients are pickled to be loaded w
 
 I applied this distortion correction to a test image using the `cv2.undistort()` function and obtained this result: 
 
-![enter image description here](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/test3_undist.jpg)
+Before distortion correction:
+
+![Before distortion correction](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/calibration1.jpg)
+
+After distortion correction:
+
+![After distortion correction](https://github.com/ahany/advanced-lane-finding/blob/master/output_images/undist_test_img.jpg)
+
 
 ###**Pipeline (frame images)**
 
